@@ -18,7 +18,7 @@ export const AddTaskModal = ({ onTaskAdded }: { onTaskAdded?: () => void }) => {
   const [projectId, setProjectId] = useState<string>('');
   const [reminder, setReminder] = useState<string>('');
   const [projects, setProjects] = useState<any[]>([]);
-  const [openDropdown, setOpenDropdown] = useState<'PROJECT' | 'REMINDER' | null>(null);
+  const [openDropdown, setOpenDropdown] = useState<'PROJECT' | 'REMINDER' | 'TIME' | null>(null);
 
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
