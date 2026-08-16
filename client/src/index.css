@@ -3,6 +3,21 @@
 @tailwind utilities;
 
 @layer base {
+  html, body, #root {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  #root {
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
   body {
     @apply font-sans bg-bg-light text-text-primary-light antialiased transition-colors duration-200;
   }
