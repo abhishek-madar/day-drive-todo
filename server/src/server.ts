@@ -4,8 +4,6 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { config } from './config';
 import router from './routes';
-import { initQueues } from './queues';
-import './workers/task.worker'; 
 
 const app = express();
 
@@ -45,8 +43,14 @@ app.get('/api/vapidPublicKey', (req, res) => {
 if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
   app.listen(config.port, async () => {
     console.log(`Server listening on port ${config.port}`);
-    await initQueues();
-    console.log('Queues initialized');
+    try {
+      const { initQueues } = await import('./queues');
+      await import('./workers/task.worker');
+      await initQueues();
+      console.log('Queues initialized');
+    } catch (e) {
+      console.error('Failed to init queues (Redis not running?)', e);
+    }
   });
 }
 
