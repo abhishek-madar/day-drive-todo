@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { TaskModalProvider } from './context/TaskModalContext';
 import { AddTaskModal } from './components/AddTaskModal';
@@ -25,6 +25,16 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { token } = useAuth();
   if (!token) return <Navigate to="/auth" />;
   return <>{children}</>;
+};
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
 };
 
 const AppRoutes = () => {
@@ -56,6 +66,7 @@ function App() {
     <AuthProvider>
       <TaskModalProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <AppRoutes />
           <AddTaskModal />
           <CommandPalette />
