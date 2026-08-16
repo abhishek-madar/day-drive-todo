@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                        String    @id @default(auto()) @map("_id") @db.ObjectId
+  email                     String    @unique
+  passwordHash              String
+  name                      String?
+  avatarUrl                 String?
+  
+  // Notification Preferences
+  enableBrowserNotifications Boolean   @default(false)
+  enableDeadlineReminders   Boolean   @default(true)
+  enableOverdueNotifications Boolean   @default(true)
+  reminderBeforeDeadlineMin Int       @default(30) // 5, 15, 30, 60, 120, 1440
+  repeatedOverdueIntervalHr Int?      // null (Once), 1, 3, 24
+
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
+
+  tasks                     Task[]
+  projects                  Project[]
+  pushSubscriptions         PushSubscription[]
+  notifications             Notification[]
+  focusSessions             FocusSession[]
+  activities                Activity[]
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  COMPLETED
+  OVERDUE
+}
+
+model Task {
+  id                 String     @id @default(auto()) @map("_id") @db.ObjectId
+  title              String
+  description        String?
+  priority           String     @default("MEDIUM") // LOW, MEDIUM, HIGH
+  status             TaskStatus @default(TODO)
+  
+  dueDate            DateTime?  // Contains date and time
+  reminderAt         DateTime?  // Derived from dueDate - user preference
+  completedAt        DateTime?
+  lastNotificationAt DateTime?
+  
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+
+  userId             String     @db.ObjectId
+  user               User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  projectId          String?    @db.ObjectId
+  project            Project?   @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  
+  notifications      Notification[]
+  focusSessions      FocusSession[]
+}
+
+model Project {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  color       String    @default("#000000")
+  deadline    DateTime?
+  
+  userId      String    @db.ObjectId
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  tasks     Task[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PushSubscription {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum NotificationType {
+  TASK_REMINDER
+  TASK_DUE
+  TASK_OVERDUE
+  TASK_COMPLETED
+}
+
+model Notification {
+  id        String           @id @default(auto()) @map("_id") @db.ObjectId
+  type      NotificationType
+  title     String
+  body      String
+  isRead    Boolean          @default(false)
+  
+  userId    String           @db.ObjectId
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  taskId    String?          @db.ObjectId
+  task      Task?            @relation(fields: [taskId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime         @default(now())
+}
+
+model FocusSession {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  type        String   // "pomodoro", "short_break", "long_break", "deep_work", "custom"
+  duration    Int      // duration in seconds
+  
+  userId      String   @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  taskId      String?  @db.ObjectId
+  task        Task?    @relation(fields: [taskId], references: [id], onDelete: SetNull)
+
+  createdAt   DateTime @default(now())
+}
+
+model Activity {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  action      String   // e.g. "created task", "completed task", "deleted project", "completed focus session"
+  entityType  String   // e.g. "Task", "Project", "FocusSession"
+  entityName  String   // e.g. "Buy groceries", "Website Redesign"
+  
+  userId      String   @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+}
