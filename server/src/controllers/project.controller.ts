@@ -22,7 +22,7 @@ export const getProjects = async (req: AuthRequest, res: Response) => {
 
 export const getProjectById = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const project = await prisma.project.findUnique({
       where: { id, userId: req.user!.id },
       include: {
@@ -78,7 +78,7 @@ export const createProject = async (req: AuthRequest, res: Response) => {
 
 export const updateProject = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const project = await prisma.project.update({
       where: { id, userId: req.user!.id },
       data: req.body
@@ -91,7 +91,7 @@ export const updateProject = async (req: AuthRequest, res: Response) => {
 
 export const deleteProject = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const project = await prisma.project.findUnique({ where: { id, userId: req.user!.id } });
     if (!project) return;
 

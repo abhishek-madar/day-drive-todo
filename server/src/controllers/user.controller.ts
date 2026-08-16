@@ -2,7 +2,9 @@ import { Request, Response } from 'express';
 import prisma from '../prisma';
 import bcrypt from 'bcryptjs';
 
-export const getProfile = async (req: Request, res: Response): Promise<void> => {
+import { AuthRequest } from '../middleware/authMiddleware';
+
+export const getProfile = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const userId = req.user?.id;
     if (!userId) {
@@ -83,7 +85,7 @@ export const getProfile = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-export const updateProfile = async (req: Request, res: Response): Promise<void> => {
+export const updateProfile = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const userId = req.user?.id;
     if (!userId) {
@@ -114,7 +116,7 @@ export const updateProfile = async (req: Request, res: Response): Promise<void> 
   }
 };
 
-export const updatePassword = async (req: Request, res: Response): Promise<void> => {
+export const updatePassword = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const userId = req.user?.id;
     if (!userId) {
@@ -149,7 +151,7 @@ export const updatePassword = async (req: Request, res: Response): Promise<void>
   }
 };
 
-export const updateAvatar = async (req: Request, res: Response): Promise<void> => {
+export const updateAvatar = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const userId = req.user?.id;
     if (!userId) {
@@ -172,7 +174,7 @@ export const updateAvatar = async (req: Request, res: Response): Promise<void> =
   }
 };
 
-export const deleteAccount = async (req: Request, res: Response): Promise<void> => {
+export const deleteAccount = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const userId = req.user?.id;
     if (!userId) {
