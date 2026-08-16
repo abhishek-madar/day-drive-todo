@@ -39,7 +39,7 @@ export const Auth = () => {
   };
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center bg-[#0a0a0a] p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+    <div className="min-h-screen min-h-[100dvh] w-full flex items-center justify-center bg-[#0a0a0a] p-4 sm:p-6 lg:p-8 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] relative overflow-x-hidden">
       
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-pink-600/30 via-purple-900/20 to-transparent blur-3xl"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-blue-600/30 via-indigo-900/20 to-transparent blur-3xl"></div>

@@ -48,7 +48,7 @@ export const Layout = () => {
   );
 
   return (
-    <div className="flex h-screen bg-[#e8e6dc] overflow-hidden">
+    <div className="flex min-h-screen min-h-[100dvh] bg-[#e8e6dc] w-full pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
 
       {mobileMenuOpen && (
         <div 
@@ -57,7 +57,7 @@ export const Layout = () => {
         />
       )}
 
-      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-[260px] bg-[#e8e6dc] border-r border-gray-200 transform transition-transform duration-300 flex flex-col ${
+      <aside className={`fixed lg:sticky lg:top-0 inset-y-0 left-0 z-50 w-[260px] lg:h-screen lg:h-[100dvh] bg-[#e8e6dc] border-r border-gray-200 transform transition-transform duration-300 flex flex-col ${
         mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       }`}>
 
@@ -111,7 +111,7 @@ export const Layout = () => {
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#e8e6dc]">
+      <main className="flex-1 flex flex-col min-w-0 bg-[#e8e6dc]">
         
         <header className="lg:hidden h-16 bg-[#e8e6dc] border-b border-gray-200 flex items-center justify-between px-4 flex-shrink-0">
           <div className="flex items-center gap-2">
@@ -123,7 +123,7 @@ export const Layout = () => {
           </button>
         </header>
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1">
           <div className="max-w-5xl xl:max-w-7xl 2xl:max-w-[1600px] mx-auto p-6 sm:p-8 transition-all duration-300">
             <Outlet />
           </div>
